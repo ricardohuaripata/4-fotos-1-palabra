@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
+import confetti from 'canvas-confetti';
 
 interface Letter {
   id?: number;
@@ -103,20 +104,47 @@ export class MainComponent implements OnInit {
   }
 
   selectLetter(letter: string, selectedButton: number) {
-
     for (let i = 0; i < this.tryLetters.length; i++) {
       if (this.tryLetters[i].value == '') {
         this.tryLetters[i].value = letter;
         this.tryLetters[i].selectedButton = selectedButton;
         this.disabledButtons.push(selectedButton);
+
+        // comparar palabra
+        let result = this.compareWord();
+        if (result == true) {
+          console.log('PALABRA CORRECTA');
+
+          confetti({
+            particleCount: 100,
+            spread: 160,
+            origin: { y: 0.6 },
+          });
+
+          // Clear confetti after a certain duration
+          setTimeout(() => confetti.reset(), 3000);
+        } else {
+          console.log('PALABRA INCORRECTA');
+        }
+
         return;
       }
     }
   }
 
   removeLetter(selectedLetter: Letter) {
-    this.tryLetters.find((letter) => letter.id == selectedLetter.id)!.value = '';
+    this.tryLetters.find((letter) => letter.id == selectedLetter.id)!.value =
+      '';
     const index = this.disabledButtons.indexOf(selectedLetter.selectedButton!);
     this.disabledButtons.splice(index, 1);
+  }
+
+  compareWord(): boolean {
+    for (let i = 0; i < this.tryLetters.length; i++) {
+      if (this.tryLetters[i].value != this.correctLetters[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
