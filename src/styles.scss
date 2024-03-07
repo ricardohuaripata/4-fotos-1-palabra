@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --brand-main: #001a38;
+  --brand-secondary: #030b1a;
+}
+
+$primary: #001a38;
+$secondary: #02061a;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.container {
+  max-width: 550px;
+}
+
+body {
+  background: var(--brand-main);
+  color: #ffffff;
+}
+
+img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+}
+
+.box-letter {
+  background-color: var(--brand-secondary);
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  box-shadow: 0 0 2rem 0 rgba(75, 153, 255, 0.5);;
+}
