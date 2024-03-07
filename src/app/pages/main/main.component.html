@@ -12,9 +12,9 @@
     </div>
 
     <div class="mt-4 d-flex justify-content-center">
-        @for (letter of letters; track letter; let i = $index) {
-        <div class="mx-1 box-letter d-flex justify-content-center align-items-center">
-            <h2 class="my-0" [id]="i"></h2>
+        @for (letter of tryLetters; track letter; let i = $index) {
+        <div class="mx-1 box-letter d-flex justify-content-center align-items-center" (click)="removeLetter(letter)">
+            <h2 class="my-0" [id]="letter.id">{{letter.value}}</h2>
         </div>
         }
 

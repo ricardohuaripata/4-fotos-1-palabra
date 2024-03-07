@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 
+interface Letter {
+  id?: number;
+  value?: string;
+  selectedButton?: number;
+}
+
 @Component({
   selector: 'app-main',
   standalone: true,
@@ -13,10 +19,10 @@ export class MainComponent implements OnInit {
   targetWord: any;
   pictures: any[] = [];
   loading = false;
-  letters: string[] = [];
+  correctLetters: string[] = [];
   keyboardButtons: string[] = []; //Array.from({ length: 26 }, (_, i) => String.fromCharCode('A'.charCodeAt(0) + i));
-  tryLetters: string[] = [];
   disabledButtons: number[] = [];
+  tryLetters: Letter[] = [];
 
   constructor(private readonly supabaseService: SupabaseService) {}
 
@@ -34,10 +40,18 @@ export class MainComponent implements OnInit {
         console.log(data);
         this.words = data;
         this.targetWord = data[0];
-        this.letters = this.targetWord.name.toUpperCase().split('');
-        for (const letter of this.letters) {
-          this.keyboardButtons.push(letter);
+        this.correctLetters = this.targetWord.name.toUpperCase().split('');
+        for (let i = 0; i < this.correctLetters.length; i++) {
+          this.keyboardButtons.push(this.correctLetters[i]);
+
+          let _letter: Letter = {
+            id: i,
+            value: '',
+          };
+
+          this.tryLetters.push(_letter);
         }
+        console.log(this.tryLetters);
 
         // Añade letras aleatorias hasta alcanzar un tamaño de 12
         while (this.keyboardButtons.length < 12) {
@@ -58,7 +72,7 @@ export class MainComponent implements OnInit {
 
         this.loadWordPictures();
         console.log(this.targetWord);
-        console.log(this.letters);
+        console.log(this.correctLetters);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -89,14 +103,20 @@ export class MainComponent implements OnInit {
   }
 
   selectLetter(letter: string, selectedButton: number) {
-    if (this.tryLetters.length == this.letters.length) {
-      return;
+
+    for (let i = 0; i < this.tryLetters.length; i++) {
+      if (this.tryLetters[i].value == '') {
+        this.tryLetters[i].value = letter;
+        this.tryLetters[i].selectedButton = selectedButton;
+        this.disabledButtons.push(selectedButton);
+        return;
+      }
     }
-    this.tryLetters.push(letter);
-    this.disabledButtons.push(selectedButton);
-    document.getElementById(
-      (this.tryLetters.length - 1).toString()
-    )!.innerHTML = letter;
-    console.log(this.tryLetters);
+  }
+
+  removeLetter(selectedLetter: Letter) {
+    this.tryLetters.find((letter) => letter.id == selectedLetter.id)!.value = '';
+    const index = this.disabledButtons.indexOf(selectedLetter.selectedButton!);
+    this.disabledButtons.splice(index, 1);
   }
 }
