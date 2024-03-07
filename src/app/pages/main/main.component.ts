@@ -116,8 +116,8 @@ export class MainComponent implements OnInit {
           console.log('PALABRA CORRECTA');
 
           confetti({
-            particleCount: 100,
-            spread: 160,
+            particleCount: 150,
+            spread: 110,
             origin: { y: 0.6 },
           });
 
