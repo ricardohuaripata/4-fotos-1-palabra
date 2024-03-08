@@ -116,13 +116,17 @@ export class MainComponent implements OnInit {
           console.log('PALABRA CORRECTA');
 
           confetti({
-            particleCount: 150,
-            spread: 110,
+            particleCount: 180,
+            spread: 100,
             origin: { y: 0.6 },
           });
 
           // Clear confetti after a certain duration
-          setTimeout(() => confetti.reset(), 3000);
+          setTimeout(() => {
+            confetti.reset();
+            this.loading = true;
+
+          }, 3000);
         } else {
           console.log('PALABRA INCORRECTA');
         }

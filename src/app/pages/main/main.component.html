@@ -1,5 +1,6 @@
+@if (!loading) {
+
 <div class="container my-5">
-    @if (!loading) {
     <div class="row row-cols-2 g-4">
 
         @for (picture of pictures; track picture) {
@@ -23,12 +24,23 @@
     <!-- Contenedor para el teclado virtual -->
     <div class="mt-5 d-flex justify-content-center flex-wrap">
         @for (button of keyboardButtons; track button; let i = $index) {
-        <button class="btn btn-light btn-lg mx-1 my-1" (click)="selectLetter(button, i)" [disabled]="disabledButtons.includes(i)">
+        <button class="btn btn-light btn-lg mx-1 my-1" (click)="selectLetter(button, i)"
+            [disabled]="disabledButtons.includes(i)">
             {{button}}
         </button>
         }
     </div>
 
-    }
-
 </div>
+
+}
+
+@else {
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+}
