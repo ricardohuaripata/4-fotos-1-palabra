@@ -1,4 +1,14 @@
-@if (!loading) {
+@if (loading) {
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+}
+
+@else {
 
 <div class="container my-5">
     <div class="row row-cols-2 g-4">
@@ -31,16 +41,6 @@
         }
     </div>
 
-</div>
-
-}
-
-@else {
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
 </div>
 
 }

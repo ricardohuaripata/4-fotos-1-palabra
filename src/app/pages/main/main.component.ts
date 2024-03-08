@@ -19,7 +19,7 @@ export class MainComponent implements OnInit {
   words: any[] = [];
   targetWord: any;
   pictures: any[] = [];
-  loading = false;
+  loading = true;
   correctLetters: string[] = [];
   keyboardButtons: string[] = []; //Array.from({ length: 26 }, (_, i) => String.fromCharCode('A'.charCodeAt(0) + i));
   disabledButtons: number[] = [];
@@ -32,7 +32,6 @@ export class MainComponent implements OnInit {
   }
 
   async loadWords(): Promise<void> {
-    this.loading = true;
     try {
       const { error, data } = await this.supabaseService.getWords();
       if (error) {
