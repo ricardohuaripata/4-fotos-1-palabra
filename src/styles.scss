@@ -7,6 +7,7 @@ $primary: #001a38;
 $secondary: #02061a;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import '../node_modules/animate.css/animate.min.css';
 
 .container {
   max-width: 550px;
@@ -30,4 +31,8 @@ img {
   text-align: center;
   box-shadow: 0 0 2rem 0 rgba(75, 153, 255, 0.5);
   cursor: pointer;
+}
+
+.success {
+  color: green;
 }

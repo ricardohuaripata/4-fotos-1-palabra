@@ -24,7 +24,7 @@
 
     <div class="mt-4 d-flex justify-content-center">
         @for (letter of tryLetters; track letter; let i = $index) {
-        <div class="mx-1 box-letter d-flex justify-content-center align-items-center" (click)="removeLetter(letter)">
+        <div class="mx-1 box-letter d-flex justify-content-center align-items-center" [ngClass]="{'success animated animate__bounceIn': this.success}" (click)="removeLetter(letter)">
             <h2 class="my-0" [id]="letter.id">{{letter.value}}</h2>
         </div>
         }

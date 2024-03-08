@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import confetti from 'canvas-confetti';
+import { CommonModule } from '@angular/common';
 
 interface Letter {
   id?: number;
@@ -11,7 +12,7 @@ interface Letter {
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
@@ -24,6 +25,7 @@ export class MainComponent implements OnInit {
   keyboardButtons: string[] = []; //Array.from({ length: 26 }, (_, i) => String.fromCharCode('A'.charCodeAt(0) + i));
   disabledButtons: number[] = [];
   tryLetters: Letter[] = [];
+  success: boolean = false;
 
   constructor(private readonly supabaseService: SupabaseService) {}
 
@@ -112,6 +114,7 @@ export class MainComponent implements OnInit {
         // comparar palabra
         let result = this.compareWord();
         if (result == true) {
+          this.success = true;
           console.log('PALABRA CORRECTA');
 
           confetti({
@@ -136,6 +139,9 @@ export class MainComponent implements OnInit {
   }
 
   removeLetter(selectedLetter: Letter) {
+    if(this.success) {
+      return;
+    }
     this.tryLetters.find((letter) => letter.id == selectedLetter.id)!.value =
       '';
     const index = this.disabledButtons.indexOf(selectedLetter.selectedButton!);
