@@ -22,4 +22,8 @@ export class SupabaseService {
   async getWordPictures(word_id: string) {
     return this.supabase.from('pictures').select().eq('word_id', word_id);
   }
+
+  async getWord(word_id: string) {
+    return this.supabase.from('words').select().eq('id', word_id).single();
+  }
 }

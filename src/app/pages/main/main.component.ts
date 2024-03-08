@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, afterNextRender } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import confetti from 'canvas-confetti';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 interface Letter {
   id?: number;
@@ -17,6 +17,7 @@ interface Letter {
   styleUrl: './main.component.scss',
 })
 export class MainComponent implements OnInit {
+  targetWordId: string | undefined | null;
   words: any[] = [];
   targetWord: any;
   pictures: any[] = [];
@@ -27,9 +28,20 @@ export class MainComponent implements OnInit {
   tryLetters: Letter[] = [];
   success: boolean = false;
 
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(
+    private readonly supabaseService: SupabaseService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    const localStorage = document.defaultView?.localStorage;
+
+    if (localStorage) {
+      this.targetWordId = localStorage.getItem('target_word_id');
+    }
+  }
 
   ngOnInit(): void {
+    console.log(this.targetWordId);
+
     this.loadWords();
   }
 
@@ -41,7 +53,16 @@ export class MainComponent implements OnInit {
       } else {
         console.log(data);
         this.words = data;
-        this.targetWord = data[0];
+        if (this.targetWordId) {
+          if (data.find((data: any) => data.id == this.targetWordId)) {
+            this.targetWord = data.find((data: any) => data.id == this.targetWordId);
+          } else {
+            this.targetWord = data[0];
+          }
+        } else {
+          this.targetWord = data[0];
+        }
+
         this.correctLetters = this.targetWord.name.toUpperCase().split('');
         for (let i = 0; i < this.correctLetters.length; i++) {
           this.keyboardButtons.push(this.correctLetters[i]);
@@ -104,7 +125,7 @@ export class MainComponent implements OnInit {
     }
   }
 
-  selectLetter(letter: string, selectedButton: number) {
+  selectLetter(letter: string, selectedButton: number): void {
     for (let i = 0; i < this.tryLetters.length; i++) {
       if (this.tryLetters[i].value == '') {
         this.tryLetters[i].value = letter;
@@ -114,21 +135,7 @@ export class MainComponent implements OnInit {
         // comparar palabra
         let result = this.compareWord();
         if (result == true) {
-          this.success = true;
-          console.log('PALABRA CORRECTA');
-
-          confetti({
-            particleCount: 180,
-            spread: 100,
-            origin: { y: 0.6 },
-          });
-
-          // Clear confetti after a certain duration
-          setTimeout(() => {
-            confetti.reset();
-            this.loading = true;
-
-          }, 3000);
+          this.onSuccess();
         } else {
           console.log('PALABRA INCORRECTA');
         }
@@ -138,8 +145,8 @@ export class MainComponent implements OnInit {
     }
   }
 
-  removeLetter(selectedLetter: Letter) {
-    if(this.success) {
+  removeLetter(selectedLetter: Letter): void {
+    if (this.success) {
       return;
     }
     this.tryLetters.find((letter) => letter.id == selectedLetter.id)!.value =
@@ -155,5 +162,31 @@ export class MainComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  onSuccess(): void {
+    this.success = true;
+    console.log('PALABRA CORRECTA');
+
+    confetti({
+      particleCount: 180,
+      spread: 100,
+      origin: { y: 0.6 },
+    });
+
+    let targetWordIndex = this.words.indexOf(this.targetWord);
+
+    if(targetWordIndex + 1 > this.words.length - 1) {
+      localStorage.setItem('target_word_id', this.words[0].id);
+
+    } else {
+      localStorage.setItem('target_word_id', this.words[targetWordIndex + 1].id);
+    }
+ 
+    // Clear confetti after a certain duration
+    setTimeout(() => {
+      confetti.reset();
+      location.reload();
+    }, 3000);
   }
 }

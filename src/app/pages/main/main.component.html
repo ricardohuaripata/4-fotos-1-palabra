@@ -1,16 +1,17 @@
-@if (loading) {
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div>
-
-}
-
-@else {
-
 <div class="container my-5">
+
+    @if (loading) {
+
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-light" style="width: 5rem; height: 5rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    }
+
+    @else {
+
     <div class="row row-cols-2 g-4">
 
         @for (picture of pictures; track picture) {
@@ -24,7 +25,8 @@
 
     <div class="mt-4 d-flex justify-content-center">
         @for (letter of tryLetters; track letter; let i = $index) {
-        <div class="mx-1 box-letter d-flex justify-content-center align-items-center" [ngClass]="{'success animated animate__bounceIn': this.success}" (click)="removeLetter(letter)">
+        <div class="mx-1 box-letter d-flex justify-content-center align-items-center"
+            [ngClass]="{'success animated animate__bounceIn': this.success}" (click)="removeLetter(letter)">
             <h2 class="my-0" [id]="letter.id">{{letter.value}}</h2>
         </div>
         }
@@ -41,6 +43,6 @@
         }
     </div>
 
-</div>
+    }
 
-}
+</div>
