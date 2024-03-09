@@ -1,13 +1,14 @@
 :root {
   --brand-main: #001a38;
   --brand-secondary: #030b1a;
+  --brand-tertiary: #00be0a;
 }
 
 $primary: #001a38;
-$secondary: #02061a;
+$secondary: #030b1a;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
-@import '../node_modules/animate.css/animate.min.css';
+@import "../node_modules/animate.css/animate.min.css";
 
 .container {
   max-width: 550px;
@@ -34,5 +35,10 @@ img {
 }
 
 .success {
-  color: #00be0a;
+  color: var(--brand-tertiary);
+}
+
+::selection {
+  background-color: var(--brand-tertiary);
+  color: #000000;
 }
